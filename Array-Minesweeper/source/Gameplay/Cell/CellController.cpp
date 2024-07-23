@@ -39,6 +39,12 @@ namespace Gameplay
 
 		void CellController::flagCell()
 		{
+			if (ServiceLocator::getInstance()->getBoardService()->getBoardState() == Gameplay::Board::BoardState::COMPLETED)
+			{
+				cell_model->setCellState(CellState::FLAGGED);
+				return;
+			}
+
 			switch (cell_model->getCellState())
 			{
 			case::Gameplay::Cell::CellState::FLAGGED:
@@ -48,17 +54,16 @@ namespace Gameplay
 				cell_model->setCellState(CellState::FLAGGED);
 				break;
 			}
-
-			ServiceLocator::getInstance()->getSoundService()->playSound(SoundType::FLAG);
 		}
 
 		void CellController::openCell()
 		{
-			if (cell_model->getCellState() != CellState::FLAGGED)
-			{
-				cell_model->setCellState(CellState::OPEN);
-				ServiceLocator::getInstance()->getSoundService()->playSound(SoundType::BUTTON_CLICK);
-			}
+			setCellState(CellState::OPEN);
+		}
+
+		bool CellController::canOpenCell()
+		{
+			return cell_model->getCellState() != CellState::FLAGGED && cell_model->getCellState() != CellState::OPEN;
 		}
 
 		CellState CellController::getCellState()
@@ -66,9 +71,19 @@ namespace Gameplay
 			return cell_model->getCellState();
 		}
 
+		void CellController::setCellState(CellState state)
+		{
+			cell_model->setCellState(state);
+		}
+
 		CellType CellController::getCellType()
 		{
 			return cell_model->getCellType();
+		}
+
+		void CellController::setCellType(CellType type)
+		{
+			cell_model->setCellType(type);
 		}
 
 		sf::Vector2i CellController::getCellPosition()

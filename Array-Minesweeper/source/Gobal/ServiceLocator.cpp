@@ -59,7 +59,6 @@ namespace Global
 		{
 			gameplay_service->update();
 			board_service->update();
-
 		}
 
 		ui_service->update();
